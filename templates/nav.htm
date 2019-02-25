@@ -1,7 +1,14 @@
 <nav class="navbar navbar-dark bg-dark navbar-static-top">
     <a class="navbar-brand">QuickIt</a>
     {% if user %}
-    <a href="/logout" class="btn btn-danger">Logout</a>
+    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+        Azioni
+    </button>
+    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+        <a class="dropdown-item" href="/profile/quickits">My QR</a>
+        <a class="dropdown-item" href="/logout">Logout</a>
+    </div>
     {% else %}
     {% if id %}
     <a href="/pre-login/{{id}}" class="btn btn-success">Login</a>

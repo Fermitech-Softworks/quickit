@@ -2,12 +2,99 @@
 {% block title %}Visualizza QR{% endblock %}
 {% block content %}
 {% if qr %}
-Questo QuickIt è pieno.
+<h1>{{qr.title}}</h1>
+{% if qr.content_type == 2 %}
+<img class="d-block w-100" src="http://127.0.0.1:5000/{{qr.content_link}}">
+{% endif %}
 {% else %}
 {% if user %}
-Ciao, {{user.name}}! Questo QuickIt è vuoto! QUICK_ID = {{id}}
+<div class="alert alert-primary" role="alert">
+    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
+    eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam
+    voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione
+    voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci
+    velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut
+    enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi
+    consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae
+    consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto
+    odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas
+    molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia
+    animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore,
+    cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis
+    voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum
+    necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
+    tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+    asperiores repellat.
+</div>
+<div class="row">
+    <div class="col-6">
+        <a href="/qr_allocate/1/{{id}}">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">Video</div>
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">Utilizza questo QuickIt per mostrare al Mondo il tuo video.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-6">
+        <a href="/qr_allocate/2/{{id}}">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">Foto</div>
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">Utilizza questo QuickIt per pubblicizzare la tua attività.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <a href="/qr_allocate/3/{{id}}">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">Audio</div>
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">Utilizza questo QuickIt per diffondere una tua canzone.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-6">
+        <a href="/qr_allocate/4/{{id}}">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">URL</div>
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">Utilizza questo QuickIt per pubblicizzare il tuo sito.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
 {% else %}
-Ciao, sconosciuto! Questo QuickIt è vuoto!
+<div class="alert alert-primary" role="alert">
+    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
+    eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam
+    voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione
+    voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci
+    velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut
+    enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi
+    consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae
+    consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto
+    odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas
+    molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia
+    animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore,
+    cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis
+    voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum
+    necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
+    tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+    asperiores repellat.
+</div>
+<a type="button" class="btn btn-primary btn-lg btn-block" href="/pre-login/{{id}}">Prendi questo spazio</a>
+<center><h5>E' necessario effettuare il login attraverso Google</h5></center>
 {% endif %}
 {% endif %}
 {% endblock %}

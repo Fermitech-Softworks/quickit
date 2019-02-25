@@ -18,7 +18,7 @@ dati = chiavi.readline()
 gcid, gcsk = dati.split("|", 1)
 app.secret_key = "debug-attivo"
 UPLOAD_FOLDER = './static/upload-area'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'mp4', 'avi'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'mp4', 'avi', 'mp3'])
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -44,26 +44,24 @@ app.config.from_object(__name__)
 
 
 class Qr(db.Model):
-    qid = db.Column(db.Integer, primary_key=True)
-    free = db.Column(db.Boolean, nullable=False)
+    qid = db.Column(db.Integer, primary_key=True, autoincrement=False)
     content_type = db.Column(db.Integer, nullable=False)
     content_link = db.Column(db.String, nullable=False)
+    title = db.Column(db.String, nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.uid'))
+    owner = db.relationship("User", back_populates="qrs")
 
     # TODO: Add relationship between user and qr to establish ownership
 
-    def __init__(self):
-        self.free = True
-
-    def __repr__(self):
-        return "{}-{}-{}".format(self.qid, self.free, self.content_type)
-
-    def allocate(self, content_type, content_link):
+    def __init__(self, content_type, content_link, owner_id, title, qid):
         self.content_type = content_type
         self.content_link = content_link
-        self.free = False
+        self.owner_id = owner_id
+        self.title = title
+        self.qid = qid
 
-    def deallocate(self):
-        self.free = True
+    def __repr__(self):
+        return "{}-{}-{}".format(self.qid, self.content_type)
 
 
 class User(db.Model):
@@ -72,6 +70,7 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     surname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
+    qrs = db.relationship("Qr", back_populates="owner")
 
     def __init__(self, sid, name, surname, email):
         self.social_id = sid
@@ -168,14 +167,6 @@ def page_login():
         return abort(403)
 
 
-@app.route('/dashboard')  # Testing purposes
-def page_dashboard():
-    if 'email' not in session:
-        return abort(403)
-    user = find_user(session['email'])
-    return "Benvenuto, {} {}!".format(user.name, user.surname)
-
-
 @app.route('/qr/<int:id>')
 def page_qr(id):
     qr = Qr.query.filter_by(qid=id).first()
@@ -183,10 +174,41 @@ def page_qr(id):
         user = find_user(session['email'])
         if user and not qr:
             print(session[str(request.remote_addr)])
-            id = session[str(request.remote_addr)]
+            if id == 0:
+                id = session[str(request.remote_addr)]
     except KeyError:
         user = None
     return render_template("qr/show.htm", qr=qr, user=user, id=id)
+
+
+@app.route('/qr_allocate/<int:mode>/<int:id>', methods=["POST", "GET"])
+def page_qr_allocate(mode, id):
+    if 'email' not in session:
+        return abort(403)
+    qr = Qr.query.filter_by(qid=id).first()
+    user = find_user(session['email'])
+    if qr and qr.owner_id != user.uid:
+        return abort(403)
+    if request.method == "GET":
+        return render_template("qr/allocate.htm", mode=mode, id=id, user=user)
+    if mode == 4:
+        nqr = Qr(mode, request.form['url'], user.uid, request.form['title'], id)
+    else:
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = str(id) + '.' + str(file.filename.rsplit('.', 1)[1].lower())
+            flash(
+                "Caricamento file in corso. A seconda delle dimensioni del file, potrebbe essere necessario attendere parecchio. Non chiudere questa pagina.")
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            fullpath = app.config['UPLOAD_FOLDER'] + "/" + filename
+            nqr = Qr(mode, fullpath, user.uid, request.form['title'], id)
+    db.session.add(nqr)
+    db.session.commit()
+    return redirect(url_for('page_qr', id=id))
 
 
 @app.route('/google/login')
