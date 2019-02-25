@@ -1,2 +1,2 @@
 # quickit
-Quck-it project website
+Quick-it Project website
