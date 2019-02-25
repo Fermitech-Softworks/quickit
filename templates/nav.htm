@@ -1,0 +1,12 @@
+<nav class="navbar navbar-dark bg-dark navbar-static-top">
+    <a class="navbar-brand">QuickIt</a>
+    {% if user %}
+    <a href="/logout" class="btn btn-danger">Logout</a>
+    {% else %}
+    {% if id %}
+    <a href="/pre-login/{{id}}" class="btn btn-success">Login</a>
+    {% else %}
+    <a href="/google/login" class="btn btn-success">Login</a>
+    {% endif %}
+    {% endif %}
+</nav>

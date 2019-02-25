@@ -1,0 +1,13 @@
+{% extends "stampo.htm" %}
+{% block title %}Visualizza QR{% endblock %}
+{% block content %}
+{% if qr %}
+Questo QuickIt è pieno.
+{% else %}
+{% if user %}
+Ciao, {{user.name}}! Questo QuickIt è vuoto! QUICK_ID = {{id}}
+{% else %}
+Ciao, sconosciuto! Questo QuickIt è vuoto!
+{% endif %}
+{% endif %}
+{% endblock %}
