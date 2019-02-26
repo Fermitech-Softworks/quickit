@@ -1,0 +1,27 @@
+{% extends "stampo.htm" %}
+{% block title %}QR di {{user.name}}{% endblock %}
+{% block content %}
+<h2>Lista dei tuoi QuickIt</h2>
+{% if quickits %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Titolo</th>
+            <th>Id</th>
+            <th>Tipo</th>
+            <th>Azioni</th>
+        </tr>
+        </thead>
+        {% for quickit in quickits %}
+            <tr>
+                <td>{{ quickit.title }}</td>
+                <td>{{quickit.qid}}</td>
+                <td>{% if quickit.content_type == 1%}Video{% elif quickit.content_type == 2 %}Immagine{% elif quickit.content_type == 3 %}Audio{% elif quickit.content_type == 4 %}URL{%endif%}</td>
+                <td><a href="/qr/{{ quickit.qid }}"><i class="fas fa-search"></i></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2>Uhm, qui non c'è nulla.</h2>
+{% endif %}
+{% endblock %}

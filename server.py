@@ -136,7 +136,7 @@ def find_user(email):
     return User.query.filter_by(email=email).first()
 
 
-# Webpages go beyond this line
+# Login-specific webpages go beyond this line
 
 @app.route('/')
 def page_root():
@@ -165,6 +165,41 @@ def page_login():
         return redirect(url_for('page_qr', id=0))
     else:
         return abort(403)
+
+
+@app.route('/google/login')
+@no_cache
+def google_login():
+    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET, scope=AUTHORIZATION_SCOPE, redirect_uri=AUTH_REDIRECT_URI)
+    uri, state = session.authorization_url(AUTHORIZATION_URL)
+    flask.session[AUTH_STATE_KEY] = state
+    flask.session.permanent = True
+    return flask.redirect(uri, code=302)
+
+
+@app.route('/google/auth')
+@no_cache
+def google_auth_redirect():
+    state = flask.request.args.get('state', default=None, type=None)
+    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET, scope=AUTHORIZATION_SCOPE, state=state,
+                            redirect_uri=AUTH_REDIRECT_URI)
+    oauth2_tokens = session.fetch_access_token(ACCESS_TOKEN_URI, authorization_response=flask.request.url)
+    flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
+
+    return flask.redirect(url_for('page_login'), code=302)
+
+
+@app.route('/logout')
+@no_cache
+def logout():
+    flask.session.pop(AUTH_TOKEN_KEY, None)
+    flask.session.pop(AUTH_STATE_KEY, None)
+    flask.session.pop(USER_INFO_KEY, None)
+    session.pop('email')
+    return flask.redirect(url_for('page_root'))
+
+
+# Webpages go beyond this line
 
 
 @app.route('/qr/<int:id>')
@@ -216,37 +251,15 @@ def page_qr_allocate(mode, id):
     return redirect(url_for('page_qr', id=id))
 
 
-@app.route('/google/login')
-@no_cache
-def google_login():
-    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET, scope=AUTHORIZATION_SCOPE, redirect_uri=AUTH_REDIRECT_URI)
-    uri, state = session.authorization_url(AUTHORIZATION_URL)
-    flask.session[AUTH_STATE_KEY] = state
-    flask.session.permanent = True
-    return flask.redirect(uri, code=302)
-
-
-@app.route('/google/auth')
-@no_cache
-def google_auth_redirect():
-    state = flask.request.args.get('state', default=None, type=None)
-    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET, scope=AUTHORIZATION_SCOPE, state=state,
-                            redirect_uri=AUTH_REDIRECT_URI)
-    oauth2_tokens = session.fetch_access_token(ACCESS_TOKEN_URI, authorization_response=flask.request.url)
-    flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
-
-    return flask.redirect(url_for('page_login'), code=302)
-
-
-@app.route('/logout')
-@no_cache
-def logout():
-    flask.session.pop(AUTH_TOKEN_KEY, None)
-    flask.session.pop(AUTH_STATE_KEY, None)
-    flask.session.pop(USER_INFO_KEY, None)
-    session.pop('email')
-    return flask.redirect(url_for('page_root'))
-
+@app.route("/profile/quickits")
+def page_profile_quickits():
+    if 'email' not in session:
+        return abort(403)
+    user = find_user(session['email'])
+    if not user:
+        return abort(403)
+    quickits = Qr.query.filter_by(owner_id=user.uid).all()
+    return render_template("/profile/quickits.htm", user=user, quickits=quickits)
 
 if __name__ == '__main__':
     db.create_all()
