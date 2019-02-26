@@ -2,11 +2,12 @@
 <head>
     <title>{% block title %}{% endblock %} - QuckIt</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
@@ -19,11 +20,24 @@
     {% block extrahead %}
     {% endblock %}
 </head>
-<body>
-{% include 'nav.htm' %}
-<br>
-<div class="container">
-    {% block content %}{% endblock %}
-</div>
+<body class="d-flex flex-column h-100">
+<main role="main" class="flex-shrink-0">
+    {% include 'nav.htm' %}
+    <div class="container mt-3">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+<footer class="footer mt-auto py-3 mt-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <a class="btn btn-success btn-block">Compra un QR</a>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-primary btn-block">Dillo ad un amico</a>
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

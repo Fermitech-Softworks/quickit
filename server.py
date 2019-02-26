@@ -140,7 +140,11 @@ def find_user(email):
 
 @app.route('/')
 def page_root():
-    return redirect(url_for('google_login'))
+    if 'email' not in session:
+        user=None
+    else:
+        user = find_user(session['email'])
+    return render_template("main.htm", user=user)
 
 
 @app.route('/pre-login/<int:id>')
@@ -162,6 +166,10 @@ def page_login():
             db.session.add(nuser)
             db.session.commit()
             session['email'] = nuser.email
+        try:
+            id = session[str(request.remote_addr)]
+        except:
+            return redirect(url_for('page_root'))
         return redirect(url_for('page_qr', id=0))
     else:
         return abort(403)
@@ -208,9 +216,9 @@ def page_qr(id):
     try:
         user = find_user(session['email'])
         if user and not qr:
-            print(session[str(request.remote_addr)])
             if id == 0:
                 id = session[str(request.remote_addr)]
+                session.pop(str(request.remote_addr))
     except KeyError:
         user = None
     if qr and qr.content_type == 1:
@@ -248,7 +256,7 @@ def page_qr_allocate(mode, id):
             nqr = Qr(mode, fullpath, user.uid, request.form['title'], id)
     db.session.add(nqr)
     db.session.commit()
-    return redirect(url_for('page_qr', id=id))
+    return redirect(url_for('page_profile_quickits'))
 
 
 @app.route("/profile/quickits")
@@ -263,4 +271,4 @@ def page_profile_quickits():
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
