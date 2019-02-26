@@ -178,7 +178,12 @@ def page_qr(id):
                 id = session[str(request.remote_addr)]
     except KeyError:
         user = None
-    return render_template("qr/show.htm", qr=qr, user=user, id=id)
+    if qr and qr.content_type == 1:
+        type = qr.content_link.rsplit('.', 1)[1].lower()
+        print(type)
+    else:
+        type = None
+    return render_template("qr/show.htm", qr=qr, user=user, id=id, type=type)
 
 
 @app.route('/qr_allocate/<int:mode>/<int:id>', methods=["POST", "GET"])
