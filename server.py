@@ -66,10 +66,11 @@ class Qr(db.Model):
 
 class User(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
-    social_id = db.Column(db.Integer, nullable=False)
+    social_id = db.Column(db.BigInteger, nullable=False)
     name = db.Column(db.String, nullable=False)
     surname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
+    is_admin = db.Column(db.Boolean, nullable=False)
     qrs = db.relationship("Qr", back_populates="owner")
 
     def __init__(self, sid, name, surname, email):
@@ -77,6 +78,7 @@ class User(db.Model):
         self.name = name
         self.surname = surname
         self.email = email
+        self.is_admin = False
 
     def __repr__(self):
         return "{}, {}, {}".format(self.uid, self.social_id, self.email)
@@ -163,6 +165,8 @@ def page_login():
             session['email'] = user.email
         else:
             nuser = User(user_info['id'], user_info['given_name'], user_info['family_name'], user_info['email'])
+            if len(User.query.all()) == 0:
+                nuser.is_admin = True
             db.session.add(nuser)
             db.session.commit()
             session['email'] = nuser.email
@@ -268,6 +272,50 @@ def page_profile_quickits():
         return abort(403)
     quickits = Qr.query.filter_by(owner_id=user.uid).all()
     return render_template("/profile/quickits.htm", user=user, quickits=quickits)
+
+
+@app.route("/administration/dash")
+def page_administration_dash():
+    if 'email' not in session:
+        return abort(403)
+    user = find_user(session['email'])
+    if not user or not user.is_admin:
+        return abort(403)
+    return render_template("/administration/dashboard.htm", user=user)
+
+
+@app.route("/administration/userlist")
+def page_administration_users_list():
+    if 'email' not in session:
+        return abort(403)
+    user = find_user(session['email'])
+    if not user or not user.is_admin:
+        return abort(403)
+    users = User.query.all()
+    return render_template("/administration/userlist.htm", users=users, user=user)
+
+
+@app.route("/administration/qrlist")
+def page_administration_qr_list():
+    if 'email' not in session:
+        return abort(403)
+    user = find_user(session['email'])
+    if not user or not user.is_admin:
+        return abort(403)
+    qr = Qr.query.all()
+    return render_template("/administration/qrlist.htm", qr=qr, user=user)
+
+
+@app.route("/administration/qr_user/<int:uid>")
+def page_administration_qr_user(uid):
+    if 'email' not in session:
+        return abort(403)
+    user = find_user(session['email'])
+    if not user or not user.is_admin:
+        return abort(403)
+    qr = Qr.query.filter_by(owner_id=uid)
+    return render_template("/administration/qrlist.htm", qr=qr, user=user)
+
 
 if __name__ == '__main__':
     db.create_all()

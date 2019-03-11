@@ -1,0 +1,36 @@
+{% extends "stampo.htm" %}
+{% block title %}Pannello Amministrativo{% endblock %}
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-3">Pannello Amministrativo di QuickIt</h1>
+    <p class="lead">Attraverso i comandi presenti in questa pagina, è possibile interagire con il database.</p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gestione Utenti</h5>
+                    <p class="card-text">Esegui operazioni sugli utenti nel database.</p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="/administration/userlist" class="btn btn-primary btn-block">Lista</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gestione Qr</h5>
+                    <p class="card-text">Esegui operazioni sui Qr code registrati.</p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="/administration/qrlist" class="btn btn-primary btn-block">Lista</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+{% endblock %}

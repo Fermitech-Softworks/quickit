@@ -1,0 +1,31 @@
+{% extends "stampo.htm" %}
+{% block title %}Lista utenti{% endblock %}
+{% block content %}
+<h2>Lista degli utenti</h2>
+{% if users%}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>uid</th>
+            <th>social id</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Email</th>
+            <th>Azioni</th>
+        </tr>
+        </thead>
+        {% for utente in users %}
+            <tr>
+                <td>{{ utente.uid }}</td>
+                <td>{{ utente.social_id }}</td>
+                <td>{{ utente.name }}</td>
+                <td>{{ utente.surname }}</td>
+                <td>{{ utente.email }}</td>
+                <td><a href="/administration/qr_user/{{ utente.uid }}"><i class="fas fa-qrcode"></i></a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2>Uhm, qui non c'è nulla.</h2>
+{% endif %}
+{% endblock %}
