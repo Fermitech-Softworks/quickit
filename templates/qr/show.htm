@@ -1,118 +1,109 @@
 {% extends "stampo.htm" %}
 {% block title %}Visualizza QR{% endblock %}
 {% block extrahead %}
-    {% if qr.content_type == 1%}
-        <link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet">
-        <script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script>
-    {% endif %}
+{% if qr.content_type == 1%}
+<link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet">
+<script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script>
+{% endif %}
 {% endblock %}
 {% block content %}
-    {% if qr %}
-        <h1>{{qr.title}}</h1>
-        {% if qr.content_type == 1 %}
-            <video id='my-video' class='video-js' controls preload='auto' width='1280' height='720' data-setup='{}'>
-                <source src='http://127.0.0.1:5000/{{qr.content_link}}' type='video/{{type}}'>
-                <p class='vjs-no-js'>
-                    To view this video please enable JavaScript, and consider upgrading to a web browser that
-                    <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-                </p>
-            </video>
-            <script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
-        {% endif %}
-        {% if qr.content_type == 2 %}
-            <img class="d-block w-100" src="http://127.0.0.1:5000/{{qr.content_link}}">
-        {% endif %}
-        {% if qr.content_type == 3 %}
-            <audio src="http://127.0.0.1:5000/{{qr.content_link}}" autoplay="true" controls="" preload="auto" autobuffer=""></audio>
-        {% endif %}
-        {% if qr.content_type == 4 %}
-            <a type="button" class="btn btn-primary btn-lg btn-block" href="{{qr.content_link}}">Visita il sito</a>
-        {% endif %}
-    {% else %}
-        {% if user %}
-            <div class="alert alert-primary" role="alert">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
-                eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam
-                voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione
-                voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci
-                velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut
-                enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi
-                consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae
-                consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto
-                odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas
-                molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia
-                animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore,
-                cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis
-                voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum
-                necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
-                tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
-                asperiores repellat.
+{% if qr %}
+<h1>{{qr.title}}</h1>
+{% if qr.content_type == 1 %}
+<video id='my-video' class='video-js' controls preload='auto' width='1280' height='720' data-setup='{}'>
+    <source src='http://127.0.0.1:5000/{{qr.content_link}}' type='video/{{type}}'>
+    <p class='vjs-no-js'>
+        To view this video please enable JavaScript, and consider upgrading to a web browser that
+        <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+    </p>
+</video>
+<script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
+{% endif %}
+{% if qr.content_type == 2 %}
+<img class="d-block w-100" src="http://127.0.0.1:5000/{{qr.content_link}}">
+{% endif %}
+{% if qr.content_type == 3 %}
+<audio src="http://127.0.0.1:5000/{{qr.content_link}}" autoplay="true" controls="" preload="auto" autobuffer=""></audio>
+{% endif %}
+{% if qr.content_type == 4 %}
+<a type="button" class="btn btn-primary btn-lg btn-block" href="{{qr.content_link}}">Visita il sito</a>
+{% endif %}
+{% else %}
+{% if user %}
+<div class="alert alert-primary" role="alert">
+    Quickit ti permette di integrare documenti digitali alla tradizionale carta, grazie all’utilizzo di qrcode vergini.
+    <br>L’innovazione nasce proprio dalla possibilità che diamo al cliente di inserire i propri documenti su un codice
+    qr
+    adesivo e quindi di <strong>personalizzarlo</strong>.
+    <br>È semplice: inquadra con la telecamera dello smartphone il codice e decidi a quale documento multimediale
+    associarlo. <br>Potrai attaccare il tuo adesivo dove preferisci ed avere il file che cerchi a portata di un click.
+    <br>Cosa stai aspettando? Rendi concreto il mondo digitale!
+</div>
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-4">
+        <a href="/qr_allocate/1/{{id}}">
+            <div class="card bg-primary text-white text-center p-3">
+                <blockquote class="blockquote mb-0" style="font-size:6rem">
+                    <p><i class="fas fa-video"></i></p>
+                </blockquote>
             </div>
-            <div class="row">
-                <div class="col-2"></div>
-                <div class="col-4">
-                    <a href="/qr_allocate/1/{{id}}">
-                        <div class="card bg-primary text-white text-center p-3">
-                            <blockquote class="blockquote mb-0" style="font-size:6rem">
-                              <p><i class="fas fa-video"></i></p>
-                            </blockquote>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-4">
-                    <a href="/qr_allocate/2/{{id}}">
-                        <div class="card bg-success text-white text-center p-3">
-                            <blockquote class="blockquote mb-0" style="font-size:6rem">
-                              <p><i class="fas fa-image"></i></p>
-                            </blockquote>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-2"></div>
+        </a>
+    </div>
+    <div class="col-4">
+        <a href="/qr_allocate/2/{{id}}">
+            <div class="card bg-success text-white text-center p-3">
+                <blockquote class="blockquote mb-0" style="font-size:6rem">
+                    <p><i class="fas fa-image"></i></p>
+                </blockquote>
             </div>
-            <div class="row">
-                <div class="col-2"></div>
-                <div class="col-4">
-                    <a href="/qr_allocate/3/{{id}}">
-                        <div class="card bg-warning text-white text-center p-3">
-                            <blockquote class="blockquote mb-0" style="font-size:6rem">
-                              <p><i class="fas fa-music"></i></p>
-                            </blockquote>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-4">
-                    <a href="/qr_allocate/4/{{id}}">
-                       <div class="card bg-dark text-white text-center p-3">
-                            <blockquote class="blockquote mb-0" style="font-size:6rem">
-                              <p><i class="fas fa-link"></i></p>
-                            </blockquote>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-2"></div>
+        </a>
+    </div>
+    <div class="col-2"></div>
+</div>
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-4">
+        <a href="/qr_allocate/3/{{id}}">
+            <div class="card bg-warning text-white text-center p-3">
+                <blockquote class="blockquote mb-0" style="font-size:6rem">
+                    <p><i class="fas fa-music"></i></p>
+                </blockquote>
             </div>
-        {% else %}
-            <div class="alert alert-primary" role="alert">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
-                eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam
-                voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione
-                voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci
-                velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut
-                enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi
-                consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae
-                consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto
-                odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas
-                molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia
-                animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore,
-                cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis
-                voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum
-                necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
-                tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
-                asperiores repellat.
+        </a>
+    </div>
+    <div class="col-4">
+        <a href="/qr_allocate/4/{{id}}">
+            <div class="card bg-dark text-white text-center p-3">
+                <blockquote class="blockquote mb-0" style="font-size:6rem">
+                    <p><i class="fas fa-link"></i></p>
+                </blockquote>
             </div>
-            <a type="button" class="btn btn-primary btn-lg btn-block" href="/pre-login/{{id}}">Prendi questo spazio</a>
-            <center><h5>E' necessario effettuare il login attraverso Google</h5></center>
-        {% endif %}
-    {% endif %}
+        </a>
+    </div>
+    <div class="col-2"></div>
+</div>
+{% else %}
+<div class="alert alert-primary" role="alert">
+    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
+    eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam
+    voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione
+    voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci
+    velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut
+    enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi
+    consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae
+    consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto
+    odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas
+    molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia
+    animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore,
+    cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis
+    voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum
+    necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
+    tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+    asperiores repellat.
+</div>
+<a type="button" class="btn btn-primary btn-lg btn-block" href="/pre-login/{{id}}">Prendi questo spazio</a>
+<center><h5>E' necessario effettuare il login attraverso Google</h5></center>
+{% endif %}
+{% endif %}
 {% endblock %}

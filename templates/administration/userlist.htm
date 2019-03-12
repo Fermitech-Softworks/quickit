@@ -16,12 +16,12 @@
         </thead>
         {% for utente in users %}
             <tr>
-                <td>{{ utente.uid }}</td>
+                <td><a href="/administration/user/{{ utente.uid }}/1">{{ utente.uid }}</a></td>
                 <td>{{ utente.social_id }}</td>
                 <td>{{ utente.name }}</td>
                 <td>{{ utente.surname }}</td>
                 <td>{{ utente.email }}</td>
-                <td><a href="/administration/qr_user/{{ utente.uid }}"><i class="fas fa-qrcode"></i></a></td>
+                <td><a href="/administration/qr_user/{{ utente.uid }}"><i class="fas fa-qrcode"></i></a><a href="/administration/user/{{ utente.uid }}/2"> <i class="fas fa-unlock-alt"></i></a></td>
             </tr>
         {% endfor %}
     </table>

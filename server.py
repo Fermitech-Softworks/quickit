@@ -317,6 +317,23 @@ def page_administration_qr_user(uid):
     return render_template("/administration/qrlist.htm", qr=qr, user=user)
 
 
+@app.route("/administration/user/<int:id>/<int:mode>")
+def page_administration_user(id, mode):
+    if 'email' not in session:
+        return abort(403)
+    user = find_user(session['email'])
+    if not user or not user.is_admin:
+        return abort(403)
+    utente = User.query.get_or_404(id)
+    if mode == 1:
+        return render_template("/administration/user_details.htm", utente=utente, user=user)
+    if mode == 2:
+        return render_template("/administration/promote.htm", utente=utente, user=user)
+    if id != utente.uid:
+        utente.is_admin = not utente.is_admin
+    return redirect(url_for("page_administration_users_list"))
+
+
 if __name__ == '__main__':
     db.create_all()
     app.run(debug=True, host="0.0.0.0")

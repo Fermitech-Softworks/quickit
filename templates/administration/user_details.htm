@@ -1,0 +1,26 @@
+{% extends "stampo.htm" %}
+{% block title %}Informazioni utente{% endblock %}
+{% block content %}
+<h2>Informazioni utente:</h2>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>uid</th>
+        <th>social id</th>
+        <th>Nome</th>
+        <th>Cognome</th>
+        <th>Email</th>
+        <th>Azioni</th>
+    </tr>
+    </thead>
+    <tr>
+        <td>{{ utente.uid }}</a></td>
+        <td>{{ utente.social_id }}</td>
+        <td>{{ utente.name }}</td>
+        <td>{{ utente.surname }}</td>
+        <td>{{ utente.email }}</td>
+        <td><a href="/administration/qr_user/{{ utente.uid }}"><i class="fas fa-qrcode"></i></a><a
+                href="/administration/user/{{ utente.uid }}/2"> <i class="fas fa-unlock-alt"></i></a></td>
+    </tr>
+</table>
+{% endblock %}

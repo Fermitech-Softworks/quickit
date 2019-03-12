@@ -1,0 +1,7 @@
+{% extends "stampo.htm" %}
+{% block title %}Promozione{% endblock %}
+{% block content %}
+<h2>Attivazione/Disattivazione privilegi dell'utente {{utente.nome}} {{utente.cognome}}</h2>
+<br>
+<a href="/administration/user/{{utente.uid}}/3">Per proseguire, clicca qui.</a>
+{%endblock%}

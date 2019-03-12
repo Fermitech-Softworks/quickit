@@ -17,7 +17,7 @@
                 <td>{{ q.title }}</td>
                 <td>{{ q.qid }}</td>
                 <td>{% if q.content_type == 1%}Video{% elif q.content_type == 2 %}Immagine{% elif q.content_type == 3 %}Audio{% elif q.content_type == 4 %}URL{%endif%}</td>
-                <td><a href="/qr/{{ q.qid }}"><i class="fas fa-search"></i></a> <a href="/user/{{ q.owner_id }}"><i class="fas fa-user"></i></a></td>
+                <td><a href="/qr/{{ q.qid }}"><i class="fas fa-search"></i></a> <a href="/administration/qr_user/{{ q.owner_id }}"><i class="fas fa-user"></i></a></td>
             </tr>
         {% endfor %}
     </table>
