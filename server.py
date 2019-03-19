@@ -44,14 +44,13 @@ app.config.from_object(__name__)
 
 
 class Qr(db.Model):
+    __tablename__ = "qr"
     qid = db.Column(db.Integer, primary_key=True, autoincrement=False)
     content_type = db.Column(db.Integer, nullable=False)
     content_link = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.uid'))
     owner = db.relationship("User", back_populates="qrs")
-
-    # TODO: Add relationship between user and qr to establish ownership
 
     def __init__(self, content_type, content_link, owner_id, title, qid):
         self.content_type = content_type
@@ -65,6 +64,7 @@ class Qr(db.Model):
 
 
 class User(db.Model):
+    __tablename__ = "user"
     uid = db.Column(db.Integer, primary_key=True)
     social_id = db.Column(db.BigInteger, nullable=False)
     name = db.Column(db.String, nullable=False)
@@ -72,6 +72,7 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False)
     qrs = db.relationship("Qr", back_populates="owner")
+    orders = db.relationship("Order", back_populates="user")
 
     def __init__(self, sid, name, surname, email):
         self.social_id = sid
@@ -82,6 +83,23 @@ class User(db.Model):
 
     def __repr__(self):
         return "{}, {}, {}".format(self.uid, self.social_id, self.email)
+
+
+class Order(db.Model):
+    __tablename__ = "order"
+    oid = db.Column(db.Integer, primary_key=True)
+    user = db.relationship("User", back_populates="orders")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.uid'))
+    qr_id = db.Column(db.Integer, nullable=False)
+    order_size = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, user_id, qr_id, order_size):
+        self.user_id = user_id
+        self.qr_id = qr_id
+        self.order_size = order_size
+
+    def __repr__(self):
+        return "{}-{}->{}".format(self.oid, self.user_id, self.qr_id)
 
 
 # Functions go beyond this line
@@ -143,7 +161,7 @@ def find_user(email):
 @app.route('/')
 def page_root():
     if 'email' not in session:
-        user=None
+        user = None
     else:
         user = find_user(session['email'])
     return render_template("main.htm", user=user)
@@ -263,6 +281,29 @@ def page_qr_allocate(mode, id):
     return redirect(url_for('page_profile_quickits'))
 
 
+@app.route("/qr_remove/<int:id>", methods=["POST", "GET"])
+def page_qr_remove(id):
+    if 'email' not in session:
+        return abort(403)
+    qr = Qr.query.filter_by(qid=id).first()
+    user = find_user(session['email'])
+    if qr and qr.owner_id != user.uid and not user.is_admin:
+        return abort(403)
+    qr = Qr.query.get_or_404(id)
+    ordini = Order.query.filter_by(qr_id=id).all()
+    for ordine in ordini:
+        db.session.delete(ordine)
+    if qr.content_type == 4:
+        pass
+    else:
+        os.remove(qr.content_link)
+    db.session.delete(qr)
+    db.session.commit()
+    if user.is_admin:
+        return redirect(url_for("page_administration_qr_list"))
+    return redirect(url_for("page_profile_quickits"))
+
+
 @app.route("/profile/quickits")
 def page_profile_quickits():
     if 'email' not in session:
@@ -281,7 +322,11 @@ def page_administration_dash():
     user = find_user(session['email'])
     if not user or not user.is_admin:
         return abort(403)
-    return render_template("/administration/dashboard.htm", user=user)
+    ordini = Order.query.all()
+    numero = 0
+    for ordine in ordini:
+        numero += ordine.order_size
+    return render_template("/administration/dashboard.htm", user=user, numero=numero)
 
 
 @app.route("/administration/userlist")
@@ -332,6 +377,34 @@ def page_administration_user(id, mode):
     if id != utente.uid:
         utente.is_admin = not utente.is_admin
     return redirect(url_for("page_administration_users_list"))
+
+
+@app.route("/orders/add/<int:qid>", methods=["GET", "POST"])
+def page_orders_add(qid):
+    if 'email' not in session:
+        return abort(403)
+    user = find_user(session['email'])
+    qr = Qr.query.filter_by(qid=qid, owner_id=user.uid).first()
+    if not qr:
+        return abort(403)
+    if request.method == "GET":
+        return render_template("/orders/neworder.htm", user=user, qr=qr)
+    neworder = Order(user.uid, qr.qid, request.form["numero"])
+    db.session.add(neworder)
+    db.session.commit()
+    return redirect(url_for("page_orders_inspect"))
+
+
+@app.route("/orders/inspect")
+def page_orders_inspect():
+    if 'email' not in session:
+        return abort(403)
+    user = find_user(session['email'])
+    if user.is_admin:
+        orders = Order.query.join(User).all()
+    else:
+        orders = Order.query.filter_by(user_id=user.uid).all()
+    return render_template("/orders/list.htm", user=user, orders=orders)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,19 @@
+{% extends "stampo.htm" %}
+{% block title %}Nuovo ordine{% endblock %}
+{% block content %}
+<h2>Nuovo ordine per il qr {{qr.qid}}:</h2>
+<form action="/orders/add/{{qr.qid}}" method="POST" enctype=multipart/form-data>
+    <div class="alert alert-warning" role="alert">
+    <strong>Attenzione:</strong> allo stato attuale, non è possibile acquistare quickit e questa funzione serve solo per fini statistici.
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="numero" class="col-form-label">Quantità?</label>
+            <input type="number" class="form-control" id="numero" placeholder="" name="numero">
+        </div>
+    </div>
+    <div class="form-group row">
+        <button type="submit" class="btn btn-primary btn-block">Inoltra ordine</button>
+    </div>
+</form>
+{% endblock %}

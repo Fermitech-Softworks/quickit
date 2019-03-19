@@ -17,7 +17,7 @@
                 <td>{{ quickit.title }}</td>
                 <td>{{quickit.qid}}</td>
                 <td>{% if quickit.content_type == 1%}Video{% elif quickit.content_type == 2 %}Immagine{% elif quickit.content_type == 3 %}Audio{% elif quickit.content_type == 4 %}URL{%endif%}</td>
-                <td><a href="/qr/{{ quickit.qid }}"><i class="fas fa-search"></i></td>
+                <td><a href="/qr/{{ quickit.qid }}"><i class="fas fa-search"></i></a> <a href="/qr_remove/{{quickit.qid}}"><i class="fas fa-trash-alt"></i></a></td>
             </tr>
         {% endfor %}
     </table>

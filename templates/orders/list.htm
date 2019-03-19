@@ -1,0 +1,27 @@
+{% extends "stampo.htm" %}
+{% block title %}Lista ordini{% endblock %}
+{% block content %}
+<h2>Lista dei Qr</h2>
+{% if orders %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Qr</th>
+            <th>Utente</th>
+            <th>Dimensione</th>
+            <th>Azioni</th>
+        </tr>
+        </thead>
+        {% for ordine in orders %}
+            <tr>
+                <td><a href="/qr/{{ordine.qr_id}}">{{ ordine.qr_id }}</a></td>
+                <td><a href="/administration/user/{{ordine.user_id}}/1">{{ ordine.user_id }}</a></td>
+                <td>{{ ordine.order_size }}</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2>Uhm, qui non c'è nulla.</h2>
+{% endif %}
+{% endblock %}

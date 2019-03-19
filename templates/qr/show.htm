@@ -28,6 +28,9 @@
 {% if qr.content_type == 4 %}
 <a type="button" class="btn btn-primary btn-lg btn-block" href="{{qr.content_link}}">Visita il sito</a>
 {% endif %}
+{% if user.uid == qr.qid %}
+<a type="button" class="btn btn-success btn-lg btn-block" href="/orders/add/{{qr.qid}}">Compra qr</a>
+{% endif %}
 {% else %}
 {% if user %}
 <div class="alert alert-primary" role="alert">
@@ -83,6 +86,7 @@
     </div>
     <div class="col-2"></div>
 </div>
+
 {% else %}
 <div class="alert alert-primary" role="alert">
     Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
