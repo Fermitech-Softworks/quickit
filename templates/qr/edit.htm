@@ -1,0 +1,36 @@
+{% extends "stampo.htm" %}
+{% block title %}Modifica QR{% endblock %}
+{% block content %}
+<h2>Modifica del qr</h2>
+{% if mode == 1 %}
+<form action="/qr_edit/{{qr.qid}}/{{mode}}" method="POST" enctype=multipart/form-data>
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="title" class="col-form-label">Nome del prodotto</label>
+            <input type="text" class="form-control" id="title" placeholder="{{qr.title}}" name="title">
+        </div>
+    </div>
+    <div class="form-group row">
+        <button type="submit" class="btn btn-primary btn-block">Salva</button>
+    </div>
+</form>
+{% elif mode == 2 %}
+<form action="/qr_edit/{{qr.qid}}/{{mode}}" method="POST" enctype=multipart/form-data>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="select">Tipo contenuto</label>
+        </div>
+        <select class="custom-select" id="select" name="select">
+            <option selected>Scegli dalla lista</option>
+            <option value="1">Video</option>
+            <option value="2">Immagine</option>
+            <option value="3">Musica</option>
+            <option value="4">Link</option>
+        </select>
+    </div>
+    <div class="form-group row">
+        <button type="submit" class="btn btn-primary btn-block">Salva</button>
+    </div>
+</form>
+{% endif %}
+{% endblock %}

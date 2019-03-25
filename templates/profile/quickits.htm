@@ -14,10 +14,10 @@
         </thead>
         {% for quickit in quickits %}
             <tr>
-                <td>{{ quickit.title }}</td>
+                <td><a href="/qr_edit/{{quickit.qid}}/1">{{ quickit.title }}</a></td>
                 <td>{{quickit.qid}}</td>
-                <td>{% if quickit.content_type == 1%}Video{% elif quickit.content_type == 2 %}Immagine{% elif quickit.content_type == 3 %}Audio{% elif quickit.content_type == 4 %}URL{%endif%}</td>
-                <td><a href="/qr/{{ quickit.qid }}"><i class="fas fa-search"></i></a> <a href="/qr_remove/{{quickit.qid}}"><i class="fas fa-trash-alt"></i></a></td>
+                <td><a href="/qr_edit/{{quickit.qid}}/2">{% if quickit.content_type == 1%}Video{% elif quickit.content_type == 2 %}Immagine{% elif quickit.content_type == 3 %}Audio{% elif quickit.content_type == 4 %}URL{%endif%}</a></td>
+                <td><a href="/qr/{{ quickit.qid }}"><i class="fas fa-search"></i></a> <a href="/orders/add/{{quickit.qid}}"><i class="fas fa-shopping-cart"></i></a> <a href="/qr_remove/{{quickit.qid}}"><i class="fas fa-trash-alt"></i></a></td>
             </tr>
         {% endfor %}
     </table>

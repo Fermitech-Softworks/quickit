@@ -31,7 +31,7 @@
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <a class="btn btn-success btn-block">Compra un QR</a>
+                <a class="btn btn-success btn-block" {%if user %} href="/profile/quickits" {%else%} href = "/google/login" {%endif%}>Compra un QR</a>
             </div>
             <div class="col-6">
                 <a class="btn btn-primary btn-block">Dillo ad un amico</a>

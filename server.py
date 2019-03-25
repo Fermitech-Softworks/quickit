@@ -304,6 +304,62 @@ def page_qr_remove(id):
     return redirect(url_for("page_profile_quickits"))
 
 
+@app.route("/qr_edit/<int:id>/<int:mode>", methods=["POST", "GET"])
+def page_qr_edit(id, mode):
+    if 'email' not in session:
+        return abort(403)
+    qr = Qr.query.filter_by(qid=id).first()
+    user = find_user(session['email'])
+    if qr and qr.owner_id != user.uid and not user.is_admin:
+        return abort(403)
+    if request.method == "GET":
+        return render_template("qr/edit.htm", qr=qr, mode=mode, user=user)
+    if mode == 1:
+        qr.title = request.form['title']
+        db.session.commit()
+        return redirect(url_for("page_qr", id=id))
+    else:
+        tipo = request.form['select']
+        return redirect(url_for("page_qr_reallocate", id=id, mode=tipo))
+
+
+@app.route("/qr_reallocate/<int:id>/<int:mode>", methods=["POST", "GET"])
+def page_qr_reallocate(id, mode):
+    if 'email' not in session:
+        return abort(403)
+    qr = Qr.query.filter_by(qid=id).first()
+    user = find_user(session['email'])
+    if qr and qr.owner_id != user.uid and not user.is_admin:
+        return abort(403)
+    if request.method == "GET":
+        return render_template("qr/reallocate.htm", qr=qr, mode=mode, user=user)
+    else:
+        if qr.content_type == 4:
+            pass
+        else:
+            os.remove(qr.content_link)
+        qr.content_type = mode
+        if mode == 4:
+            qr.content_link = request.form['url']
+        else:
+            if 'file' not in request.files:
+                return redirect(request.url)
+            file = request.files['file']
+            if file.filename == '':
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                filename = str(id) + '.' + str(file.filename.rsplit('.', 1)[1].lower())
+                flash(
+                    "Caricamento file in corso. A seconda delle dimensioni del file, potrebbe essere necessario attendere parecchio. Non chiudere questa pagina.")
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                fullpath = app.config['UPLOAD_FOLDER'] + "/" + filename
+                qr.content_link = fullpath
+        db.session.commit()
+        return redirect(url_for("page_qr", id=id))
+
+
+
+
 @app.route("/profile/quickits")
 def page_profile_quickits():
     if 'email' not in session:
